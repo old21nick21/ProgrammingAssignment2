@@ -1,44 +1,54 @@
-## Create a vector using cached mean value, if available
-makeVector <- function(x = numeric()) {
+## Coursera Programming Assignment #2
+## functions to inverse the content of the matrix
+## using the cached inversed matrix, if available
 
-  ## Init  value for m
-  m <- NULL
-  ## set values, assigning them from the other environmnet
-  ## evoking cachemean function in process
-  set <- function(y) {
-    x <<- y
-    m <<- NULL
+## Main function - calculate the inversion of the matrix
+## with get and set functionality
+makeCacheMatrix <- function(x = matrix()) {
+  ## initiates m value
+  m <- NULL 
+  ## set the value of the matrix, assining them from the other environment
+  ## evoking caheSolve function in process
+  set <- function(y) { 
+    ## looks for cacheSolve
+    x <<- y 
+    m <<- NULL 
   }
   ## returns x
   get <- function() x
-  ## sets the value of mean using the other environment
-  setmean <- function(mean) m <<- mean
-  ## returns value of the mean, if any
-  getmean <- function() m
-  ## finally generate a vector with all available values
-  list(set = set, get = get,
-       setmean = setmean,
-       getmean = getmean)
-
+  ## sets the inverted matrix using the other environment
+  setinvertmatrix <- function(solve) m <<- solve
+  ## returns the inverted matrix, if any
+  getinvertmatrix <- function() m
+  # holder for set and get functions
+  list(set = set, get = get, 
+       setinvertmatrix = setinvertmatrix,
+       getinvertmatrix = getinvertmatrix)  
 }
 
 
-## Checks if mean is already calculated, 
-## and perfroms the calculation, if mean value is empty
-cachemean <- function(x, ...) {
-  ## checks getmean values and uses them if available
-  ## giving user a warning message
-  m <- x$getmean()
-  if(!is.null(m)) {
-    message("getting cached data")
-    return(m)  ## exits the function
+## Calculate the inversion of the matrix x, 
+## checking if this is already being done
+## and returning the cached values, if available
+cacheSolve <- function(x, ...) {
+  
+  ## need to check if the same original matrix is being used
+  cur<<-x
+  if(!x==cur){
+    ## checks if inversion is already calculated
+    m <- x$getinvertmatrix()
+    if(!is.null(m)) {
+      ## uses cashed inversion and giving user a warning about it
+      message("using cached inversion")
+      return(m)  ## exits the function
+    }
   }
   ## finds out the value of x
-  data <- x$get()
-  ## calculates the mean
-  m <- mean(data, ...)
-  ## sets the mean value in the other environment 
-  x$setmean(m)
-  ## returns m (mean value)
+  matr <- x$get()
+  ## calculates the matrix inversion
+  m <- solve(matr, ...)
+  ## sets the inverted matrix value in the other environment 
+  x$setinvertmatrix(m)
+  ## returns m (inverted matrix)
   m
 }
